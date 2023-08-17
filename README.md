@@ -32,4 +32,15 @@ Francisco J. de la Higuera Rodríguez-Madridejos
 
 ```
 
+- **Cuerpo de la respuesta:**
+
+```json
+{
+    "resultado": 2.0
+}
+
+```
+
+
+
 
