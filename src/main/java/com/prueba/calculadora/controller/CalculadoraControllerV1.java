@@ -1,8 +1,10 @@
 package com.prueba.calculadora.controller;
 
+import com.prueba.calculadora.dto.OperacionErr;
 import com.prueba.calculadora.dto.OperacionIn;
 import com.prueba.calculadora.dto.OperacionOut;
 import com.prueba.calculadora.service.CalculadoraService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +34,7 @@ public class CalculadoraControllerV1 {
      * @return La respuesta que contiene el resultado de la operación.
      */
     @PostMapping("/operacion")
-    public ResponseEntity<OperacionOut> calcularOperacion(@RequestBody OperacionIn request) {
+    public ResponseEntity<?> calcularOperacion(@RequestBody OperacionIn request) {
         try {
             tracerImpl.trace(Instant.now() + " - Inicio de operación tipo: " + request.getOperacion().toUpperCase());
 
@@ -49,9 +51,11 @@ public class CalculadoraControllerV1 {
             return ResponseEntity.ok(response);
 
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().build();
+            OperacionErr operacionErr = new OperacionErr(400, "Error en parámetros");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(operacionErr);
         } catch (Exception ex) {
-            return ResponseEntity.internalServerError().build();
+            OperacionErr operacionErr = new OperacionErr(500, "Error interno del servidor");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(operacionErr);
         }
     }
 }
